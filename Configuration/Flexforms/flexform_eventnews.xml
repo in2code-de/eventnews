@@ -32,6 +32,14 @@
                 </config>
             </TCEforms>
         </settings.eventRestriction>
+        <settings.currentMonth>
+            <TCEforms>
+                <label>LLL:EXT:eventnews/Resources/Private/Language/locallang.xlf:flexforms_general.currentMonth</label>
+                <config>
+                    <type>check</type>
+                </config>
+            </TCEforms>
+        </settings.currentMonth>
     </el>
 </ROOT>
 </extra>

@@ -89,6 +89,12 @@ class NewsController extends \GeorgRinger\News\Controller\NewsController
         $demand = $this->createDemandObjectFromSettings($this->settings);
         $demand->setActionAndClass(__METHOD__, __CLASS__);
 
+        if ($this->settings['currentMonth'] === '1') {
+            $now = new \DateTime();
+            $demand->setYear($now->format('Y'));
+            $demand->setMonth($now->format('n'));
+        }
+
         if ($this->settings['disableOverrideDemand'] != 1 && $overwriteDemand !== null) {
             $demand = $this->overwriteDemandObject($demand, $overwriteDemand);
         }

@@ -155,8 +155,7 @@ class NewsController extends \GeorgRinger\News\Controller\NewsController
             $demand->setYear(date('Y'));
         }
 
-        $demand->setDay($overwriteDemand['day']);
-        $demand->setRespectDay(true);
+        $demand->setDay(null);
 
         if (!is_null($search)) {
             $validCategories = [];

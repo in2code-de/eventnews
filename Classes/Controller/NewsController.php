@@ -96,6 +96,8 @@ class NewsController extends \GeorgRinger\News\Controller\NewsController
         }
 
         if ($this->settings['disableOverrideDemand'] != 1 && $overwriteDemand !== null) {
+            $demand->setTimeRestriction(null);
+            $demand->setTimeRestrictionHigh(null);
             $demand = $this->overwriteDemandObject($demand, $overwriteDemand);
         }
         $newsRecords = $this->newsRepository->findDemanded($demand);

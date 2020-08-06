@@ -6,6 +6,9 @@ if (!defined('TYPO3_MODE')) {
 // Add new controller/action
 $GLOBALS['TYPO3_CONF_VARS']['EXT']['news']['switchableControllerActions']['newItems']['News->month']
     = 'Month view';
+// Add new controller/action
+$GLOBALS['TYPO3_CONF_VARS']['EXT']['news']['switchableControllerActions']['newItems']['News->eventList']
+    = 'Event list';
 
 /***********
  * Hooks
@@ -25,6 +28,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXT']['news'][\GeorgRinger\News\Hooks\PageLayoutVie
 // Extend the query
 $GLOBALS['TYPO3_CONF_VARS']['EXT']['news']['Domain/Repository/AbstractDemandedRepository.php']['findDemanded']['eventnews']
     = \GeorgRinger\Eventnews\Hooks\AbstractDemandedRepository::class . '->modify';
+
 
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['formDataGroup']['tcaDatabaseRecord'][\GeorgRinger\Eventnews\Backend\FormDataProvider\EventNewsRowInitializeNew::class] = [
     'depends' => [

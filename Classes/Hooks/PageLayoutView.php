@@ -31,7 +31,7 @@ class PageLayoutView
      */
     public function extensionSummary(array $params, \GeorgRinger\News\Hooks\PageLayoutView $pageLayout)
     {
-        if ($params['action'] === 'news_month') {
+        if ($params['action'] === 'news_month' || $params['action'] === 'news_eventlist') {
             $pageLayout->getStartingPoint();
             $pageLayout->getTimeRestrictionSetting();
             $pageLayout->getTopNewsRestrictionSetting();

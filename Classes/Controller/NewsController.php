@@ -15,6 +15,9 @@ namespace GeorgRinger\Eventnews\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
+use GeorgRinger\News\Utility\Cache;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * Class GeorgRinger\Eventnews\Controller\NewsController
  */
@@ -44,7 +47,7 @@ class NewsController extends \GeorgRinger\News\Controller\NewsController
         $categoryRepository = $this->objectManager->get(\GeorgRinger\News\Domain\Repository\CategoryRepository::class);
         $categoryRepository->setDefaultOrderings(
             [
-                'title' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_ASCENDING
+                'title' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_ASCENDING,
             ]
         );
 
@@ -65,7 +68,8 @@ class NewsController extends \GeorgRinger\News\Controller\NewsController
             'allOrganizers' => $organizerRepository->findByStartingPoint($organizerPidList),
             'allLocations' => $locationRepository->findByStartingPoint($locationPidList),
             'allCategories' => empty($categories) ? [] : $categoryRepository->findByIdList($categories),
-            'allTags' => empty($this->settings['tags']) ? [] : $tagRepository->findByIdList(explode(',', $this->settings['tags'])),
+            'allTags' => empty($this->settings['tags']) ? [] : $tagRepository->findByIdList(explode(',',
+                $this->settings['tags'])),
             'previousMonthData' => $this->getDateConfig($demand, '-1 month'),
             'nextMonthData' => $this->getDateConfig($demand, '+1 month'),
             'currentMonthData' => $this->getDateConfig($demand),
@@ -73,6 +77,54 @@ class NewsController extends \GeorgRinger\News\Controller\NewsController
 
         $assignedValues = $this->emitActionSignal('NewsController', self::SIGNAL_NEWS_MONTH_ACTION, $assignedValues);
         $this->view->assignMultiple($assignedValues);
+    }
+
+    /**
+     * Output a list view of events
+     *
+     * @param array $overwriteDemand
+     */
+    public function eventListAction(array $overwriteDemand = null)
+    {
+        $demand = $this->createDemandObjectFromSettings($this->settings);
+        $demand->setActionAndClass(__METHOD__, __CLASS__);
+
+        if ($this->settings['disableOverrideDemand'] != 1 && $overwriteDemand !== null) {
+            $demand = $this->overwriteDemandObject($demand, $overwriteDemand);
+        }
+        $newsRecords = $this->newsRepository->findDemanded($demand);
+
+        $assignedValues = [
+            'news' => $newsRecords,
+            'overwriteDemand' => $overwriteDemand,
+            'demand' => $demand,
+            'categories' => null,
+            'tags' => null,
+        ];
+
+        if ($demand->getCategories() !== '') {
+            $categoriesList = $demand->getCategories();
+            if (!is_array($categoriesList)) {
+                $categoriesList = GeneralUtility::trimExplode(',', $categoriesList);
+            }
+            if (!empty($categoriesList)) {
+                $assignedValues['categories'] = $this->categoryRepository->findByIdList($categoriesList);
+            }
+        }
+
+        if ($demand->getTags() !== '') {
+            $tagList = $demand->getTags();
+            if (!is_array($tagList)) {
+                $tagList = GeneralUtility::trimExplode(',', $tagList);
+            }
+            if (!empty($tagList)) {
+                $assignedValues['tags'] = $this->tagRepository->findByIdList($tagList);
+            }
+        }
+        $assignedValues = $this->emitActionSignal('NewsController', self::SIGNAL_NEWS_LIST_ACTION, $assignedValues);
+        $this->view->assignMultiple($assignedValues);
+
+        Cache::addPageCacheTagsByDemandObject($demand);
     }
 
     /**
@@ -135,7 +187,7 @@ class NewsController extends \GeorgRinger\News\Controller\NewsController
         return [
             'date' => $date,
             'month' => $date->format('n'),
-            'year' => $date->format('Y')
+            'year' => $date->format('Y'),
         ];
     }
 }

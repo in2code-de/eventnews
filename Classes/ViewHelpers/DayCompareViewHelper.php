@@ -2,13 +2,24 @@
 
 namespace GeorgRinger\Eventnews\ViewHelpers;
 
+/**
+ * This file is part of the "eventnews" Extension for TYPO3 CMS.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ */
+
 use GeorgRinger\Eventnews\Domain\Model\Dto\Demand;
 use GeorgRinger\Eventnews\Domain\Model\News as EventNews;
 use GeorgRinger\News\Domain\Model\News;
+use TYPO3\CMS\Core\Utility\HttpUtility;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 class DayCompareViewHelper extends AbstractViewHelper
 {
+    use CompileWithRenderStatic;
 
     /**
      * Initialize arguments
@@ -17,21 +28,26 @@ class DayCompareViewHelper extends AbstractViewHelper
     {
         $this->registerArgument('newsItem', News::class, 'News item', true);
         $this->registerArgument('demand', Demand::class, 'demand object', true);
-        parent::initializeArguments();
     }
 
     /**
-     * @param array|null $arguments
+     * @param array $arguments
+     * @param \Closure $renderChildrenClosure
+     * @param RenderingContextInterface $renderingContext
      * @return bool
      */
-    public function render()
+    public static function renderStatic(
+        array $arguments,
+        \Closure $renderChildrenClosure,
+        RenderingContextInterface $renderingContext
+    )
     {
         $found = false;
 
         /** @var Demand $demand */
-        $demand = $this->arguments['demand'];
+        $demand = $arguments['demand'];
         /** @var EventNews $newsItem */
-        $newsItem = $this->arguments['newsItem'];
+        $newsItem = $arguments['newsItem'];
 
         $currentDay = \DateTime::createFromFormat('d-m-Y H:i:s', sprintf(
             '%s-%s-%s 00:00:00', $demand->getDay(), $demand->getMonth(), $demand->getYear()));
@@ -50,8 +66,9 @@ class DayCompareViewHelper extends AbstractViewHelper
         if ($newsBeginDate <= $currentDay && $newsEndDate >= $currentDay) {
             $found = true;
         }
-//        print_r([$newsItem->getTitle(), (int)$found, 'day' => $currentDay, 'begin' => $newsBeginDate, 'end' => $newsEndDate]);
 
         return $found;
     }
+
+
 }

@@ -6,7 +6,7 @@
 	<div class="row">
 		<div class="col-md-2">
 			<h3>
-				<f:translate key="filter" />
+				<f:translate key="filter" extensionName="eventnews" />
 			</h3>
 			<f:form method="post" action="month" object="{search}" name="search" arguments="{overwriteDemand:overwriteDemand}">
 				<input type="hidden" name="id" value="{currentPageId}" />
@@ -91,15 +91,15 @@
 						<th colspan="7">
 							<ul class="pager">
 								<li class="previous">
-									<f:link.page rel="nofollow" pageUid="{currentPageId}" additionalParams="{tx_news_pi1:{overwriteDemand:{month:previousMonthData.month,year:previousMonthData.year}}}">
+									<f:link.action controller="News" action="month" arguments="{overwriteDemand:{month:previousMonthData.month,year:previousMonthData.year}}" pageUid="{currentPageId}" rel="nofollow">
 										&larr; {f:format.date(date:previousMonthData.date,format:'%B %Y')}
-									</f:link.page>
+									</f:link.action>
 								</li>
 								<li>{f:format.date(date:currentMonthData.date,format:'%B %Y')}</li>
 								<li class="next">
-									<f:link.page rel="nofollow" pageUid="{currentPageId}" additionalParams="{tx_news_pi1:{overwriteDemand:{month:nextMonthData.month,year:nextMonthData.year}}}">
+									<f:link.action controller="News" action="month" arguments="{overwriteDemand:{month:nextMonthData.month,year:nextMonthData.year}}" pageUid="{currentPageId}" rel="nofollow">
 										{f:format.date(date:nextMonthData.date,format:'%B %Y')} &rarr;
-									</f:link.page>
+									</f:link.action>
 								</li>
 							</ul>
 						</th>
@@ -148,7 +148,7 @@
 	<div class="col-md-12" style="border: 1px solid #ccc;">
 		<strong>
 			<n:link newsItem="{n}" settings="{settings}">{n.title}</n:link>
-			| {f:format.date(date:n.datetime.date,format:'%d.%m')}</strong>
+			| {f:format.date(date:n.datetime,format:'%d.%m')}</strong>
 		<ul>
 			<f:if condition="{n.organizer}">
 				<li><strong>
@@ -168,7 +168,7 @@
 				<li>
 					<strong>
 						<f:translate key="event_end" extensionName="eventnews" />
-					</strong>: {f:format.date(date:n.eventEnd.date,format:'%d.%m.%Y')}
+					</strong>: {f:format.date(date:n.eventEnd,format:'%d.%m.%Y')}
 				</li>
 			</f:if>
 		</ul>

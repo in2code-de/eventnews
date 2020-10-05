@@ -1,8 +1,17 @@
 <?php
-
+declare(strict_types=1);
 namespace GeorgRinger\Eventnews\Domain\Model\Dto;
 
-class Demand extends \GeorgRinger\News\Domain\Model\Dto\NewsDemand
+use GeorgRinger\News\Domain\Model\Dto\NewsDemand;
+
+/**
+ * This file is part of the "eventnews" Extension for TYPO3 CMS.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ */
+
+class Demand extends NewsDemand
 {
     const EVENT_RESTRICTION_ONLY_EVENTS = 1;
     const EVENT_RESTRICTION_NO_EVENTS = 2;
@@ -159,7 +168,7 @@ class Demand extends \GeorgRinger\News\Domain\Model\Dto\NewsDemand
     /**
      * @param bool $respectDay
      */
-    public function setRespectDay(bool $respectDay): void
+    public function setRespectDay(bool $respectDay)
     {
         $this->respectDay = $respectDay;
     }

@@ -3,7 +3,7 @@
 namespace GeorgRinger\Eventnews\ViewHelpers;
 
 use GeorgRinger\Eventnews\Domain\Model\Dto\Demand;
-use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 class CalendarViewHelper extends AbstractViewHelper
 {
@@ -65,6 +65,7 @@ class CalendarViewHelper extends AbstractViewHelper
                 $day['ts'] = $dts;
                 $day['day'] = (int)date('j', $dts);
                 $day['month'] = (int)date('n', $dts);
+                $day['year'] = (int)date('Y', $dts);
                 $day['curmonth'] = $day['month'] == $month;
                 $day['curday'] = date('Ymd') == date('Ymd', $day['ts']);
 
